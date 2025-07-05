@@ -56,7 +56,6 @@ This project addresses the challenge by proposing a **novel algorithm** capable 
 | HTML/CSS | Web page structure and styling |
 | JavaScript | Client-side interactivity |
 | Flask | Web framework to connect backend and frontend |
-| Bootstrap (optional) | UI framework for responsive design |
 
 ---
 
@@ -109,14 +108,6 @@ SOMA is distinct because:
 
 ---
 
-## 📊 Estimated Implementation Cost
-
-- Open-source tools only (Python, Flask, OpenCV, etc.)
-- ₹0 for local execution
-- Optional ₹1,000/month for Google Colab Pro (for training or cloud compute)
-- Chandrayaan datasets available from ISRO archive
-
----
 
 ## 🧑‍💻 Contributors
 
