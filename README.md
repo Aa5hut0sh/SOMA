@@ -32,23 +32,16 @@ This project addresses the challenge by proposing a **novel algorithm** capable 
 - 🔥 **Risk Heatmap Generation**
 - 🌐 **Region-Agnostic (any part of the Moon)**
 - 📊 **Detailed Metadata Output** (.csv/.json)
+- 🖥️ **Modern UI** for visualization and image upload
 
 ---
 
-## 🛰️ Data Sources
-
-| Dataset | Description | Source |
-|---------|-------------|--------|
-| TMC (Terrain Mapping Camera) | Panchromatic topographic images | Chandrayaan-1/2 |
-| OHRC (Optical High Resolution Camera) | High-res surface imaging | Chandrayaan-2 |
-| DTM (Digital Terrain Model) | Elevation map derived from TMC | ISRO Archives |
-
----
 
 ---
 
 ## 🛠 Technologies Used
 
+### 🔧 Backend
 | Tool | Purpose |
 |------|---------|
 | Python | Core logic and orchestration |
@@ -56,26 +49,29 @@ This project addresses the challenge by proposing a **novel algorithm** capable 
 | NumPy / SciPy | Elevation matrix analysis |
 | Matplotlib | Plotting and visualization |
 | Rasterio / GDAL (optional) | Elevation/DTM data loading |
-| QGIS (optional) | Manual validation and mapping |
+
+### 🎨 Frontend
+| Tool | Purpose |
+|------|---------|
+| HTML/CSS | Web page structure and styling |
+| JavaScript | Client-side interactivity |
+| Flask | Web framework to connect backend and frontend |
+| Bootstrap (optional) | UI framework for responsive design |
 
 ---
 
 
 ---
 
-## 🧪 How to Use
-
-### 1. Install Dependencies
+## 🧪 How to Use locally
 
 ```bash
+git clone https://github.com/your-username/SOMA-main.git
+cd SOMA
 pip install -r requirements.txt
+python app.py
 ```
 
-### 2. Run App
-
-```bash
-python appn.py --input image in tif/jpg/png format --output data/output/boulders.png
-```
 
 ---
 
@@ -85,7 +81,7 @@ python appn.py --input image in tif/jpg/png format --output data/output/boulders
 - `landslides.png`: Highlighted regions of potential mass movement
 - `heatmap.png`: Risk map showing active zones
 - `boulder_stats.csv`: Diameter, area, position data for each boulder
-- `report.pdg` : Detailed pdf containg all the  iamges and sats
+- `report.pdf`: Pdf file containing all stats and generated images
 
 ---
 
@@ -113,13 +109,20 @@ SOMA is distinct because:
 
 ---
 
+## 📊 Estimated Implementation Cost
 
-## 🧑‍💻 Contributors
-
-- Ashutosh Sharma
-- Suryansh
-- Gurpreet Arora
-- Saumya Ganeshe
+- Open-source tools only (Python, Flask, OpenCV, etc.)
+- ₹0 for local execution
+- Optional ₹1,000/month for Google Colab Pro (for training or cloud compute)
+- Chandrayaan datasets available from ISRO archive
 
 ---
 
+## 🧑‍💻 Contributors
+
+- Ashutosh Sharma – Team Leader
+- Gurpreet Arora
+- Suryansh
+- Saumya Ganeshe
+
+---
