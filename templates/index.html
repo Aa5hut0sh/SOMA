@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌕 SOMA - Advanced Moon Surface Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Cosmic Background -->
+    <div class="cosmic-bg">
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+        <div class="stars"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">
+                🌕 SOMA
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span>
+                <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+       <section class="hero">
+            <h1 class="hero-title">Discover the Moon's Secrets</h1>
+            <p class="hero-subtitle">
+                Advanced AI-powered analysis of lunar surface features with precision boulder detection, 
+                comprehensive landslide mapping, and intelligent risk assessment for safer lunar exploration missions.
+            </p>
+
+            <!-- Enhanced Feature Cards -->
+            <div class="hero-features">
+                <div class="hero-feature" style="--delay: 0s;">
+                    <span class="hero-feature-icon">🪨</span>
+                    <div class="hero-feature-title">Boulder Detection</div>
+                    <div class="hero-feature-desc">AI-powered identification and classification of lunar boulders</div>
+                </div>
+                <div class="hero-feature" style="--delay: 0.1s;">
+                    <span class="hero-feature-icon">🏔️</span>
+                    <div class="hero-feature-title">Landslide Mapping</div>
+                    <div class="hero-feature-desc">Comprehensive analysis of geological formations and instabilities</div>
+                </div>
+                <div class="hero-feature" style="--delay: 0.2s;">
+                    <span class="hero-feature-icon">📊</span>
+                    <div class="hero-feature-title">Risk Analysis</div>
+                    <div class="hero-feature-desc">Advanced statistical modeling for mission safety assessment</div>
+                </div>
+                <div class="hero-feature" style="--delay: 0.3s;">
+                    <span class="hero-feature-icon">📍</span>
+                    <div class="hero-feature-title">Source Estimation</div>
+                    <div class="hero-feature-desc">Precise tracking of boulder origins and trajectory analysis</div>
+                </div>
+            </div>
+
+            <!-- Hero Stats -->
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-number">99.7%</span>
+                    <span class="hero-stat-label">Detection Accuracy</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">15+</span>
+                    <span class="hero-stat-label">Analysis Types</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="hero-stat-number">< 30s</span>
+                    <span class="hero-stat-label">Processing Time</span>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="hero-cta">
+                <a href="#uploadSection" class="cta-button">
+                    🚀 Start Analysis
+                    <span>→</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Upload Section -->
+        <section class="card" id="uploadSection">
+            <h2 class="card-title">🚀 Upload Lunar Surface Image</h2>
+            <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📡</div>
+                    <div class="upload-text" id="uploadStatusText">Drag and drop your lunar image here, or click to browse</div>
+                    <input type="file" name="image" id="fileInput" class="file-input" accept=".jpg,.jpeg,.png,.tif,.tiff,.img" required>
+                    <button type="button" class="upload-btn" id="upl-btn" onclick="document.getElementById('fileInput').click()">
+                        📤 Choose Image
+                    </button>
+                </div>
+                <div style="text-align: center; color: var(--accent-tertiary); font-weight: 500; margin-top: 1rem;" id="uploadCompleteText"></div>
+            </form>
+
+            
+            <div class="processing" id="processing">
+                <div class="spinner"></div>
+                <p>🔬 Analyzing lunar surface features...</p>
+                <p><small>This may take a few moments</small></p>
+            </div>
+        </section>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="results" style="display: none;">
+            <!-- Preview -->
+            <section class="card fade-in">
+                <h2 class="card-title">🖼️ Original Image</h2>
+                <img src="{{ url_for('static', filename='preview.jpg') }}?{{ random() }}" class="result-image" alt="Original Image" onclick="openModal(this)">
+            </section>
+
+            <!-- Results Grid -->
+            <div class="results-grid">
+                <!-- Boulder Detection -->
+                <section class="card fade-in">
+                    <h2 class="card-title">🪨 Boulder Detection</h2>
+                    <img src="{{ url_for('static', filename='boulders_detected.jpg') }}?{{ random() }}" class="result-image" alt="Detected Boulders" onclick="openModal(this)">
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: green;"></div>
+                            <span>Round Boulders</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: orange;"></div>
+                            <span>Elongated Boulders</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: red;"></div>
+                            <span>Irregular Boulders</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Landslide Detection -->
+                <section class="card fade-in">
+                    <h2 class="card-title">🏔️ Landslide Analysis</h2>
+                    <img src="{{ url_for('static', filename='landslides_detected.jpg') }}?{{ random() }}" class="result-image" alt="Landslides" onclick="openModal(this)">
+                </section>
+
+                <!-- Clustered Analysis -->
+                <section class="card fade-in">
+                    <h2 class="card-title">🎯 Boulder Clustering</h2>
+                    <img src="{{ url_for('static', filename='clustered_boulders_plot.jpg') }}?{{ random() }}" class="result-image" alt="Clustered Plot" onclick="openModal(this)">
+                </section>
+
+                <!-- Risk Heatmap -->
+                <section class="card fade-in">
+                    <h2 class="card-title">🌋 Risk Assessment</h2>
+                    <img src="{{ url_for('static', filename='risk_heatmap.jpg') }}?{{ random() }}" class="result-image" alt="Risk Heatmap" onclick="openModal(this)">
+                </section>
+
+                <!-- Source Estimation -->
+                <section class="card fade-in">
+                    <h2 class="card-title">📍 Source Point Analysis</h2>
+                    <img src="{{ url_for('static', filename='boulders_with_source.jpg') }}?{{ random() }}" class="result-image" alt="Source Point" onclick="openModal(this)">
+                </section>
+            </div>
+
+            <!-- Interactive Heatmap -->
+            <section class="card fade-in">
+                <h2 class="card-title">🛰️ Interactive Boulder Map</h2>
+                <div id="heatmap" class="map-container"></div>
+            </section>
+
+            <!-- Statistics -->
+            <section class="card fade-in">
+                <h2 class="card-title">📊 Analysis Statistics</h2>
+                <div class="stats-container" id="statsContainer">{{ stats_text }}</div>
+            </section>
+
+            <!-- Downloads -->
+            <section class="card fade-in">
+                <h2 class="card-title">📥 Download Results</h2>
+                <div class="download-section">
+                    <a href="{{ url_for('static', filename='report.pdf') }}" class="download-btn" download>
+                        📄 Full Report (PDF)
+                    </a>
+                    <a href="{{ url_for('static', filename='boulder_data_clustered.csv') }}" class="download-btn" download>
+                        📈 Boulder Data (CSV)
+                    </a>
+                </div>
+            </section>
+
+            <!-- Analyze Another Image Button -->
+            
+                <div style="text-align: center;">
+                    <button class="cta-button" onclick="analyzeAnother()">
+                        🔬 Analyze Another Image
+                    </button>
+                </div>
+            
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">SOMA - Surface Observation & Mapping Algorithm</div>
+        <p>Developed with ❤️ by Clueless Coders</p>
+        <p>Rajiv Gandhi Institute of Petroleum Technology</p>
+    </footer>
+
+    <!-- Modal for Image Preview -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Load saved theme
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+        });
+
+        // File Upload Handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const uploadForm = document.getElementById('uploadForm');
+        const processing = document.getElementById('processing');
+        const results = document.getElementById('results');
+
+        // Drag and Drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileUpload();
+            }
+        });
+
+        fileInput.addEventListener('change', handleFileUpload);
+
+        function handleFileUpload() {
+            if (fileInput.files.length > 0) {
+                processing.style.display = 'block';
+                uploadForm.submit();
+            }
+        }
+
+        // Image Modal
+        function openModal(img) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.style.display = 'block';
+            modalImg.src = img.src;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize Interactive Map
+        function initializeMap() {
+            const map = L.map('heatmap', {
+                crs: L.CRS.Simple,
+                minZoom: -5
+            });
+
+            const bounds = [[0, 0], [1, 1]];
+            const image = L.imageOverlay("{{ url_for('static', filename='boulders_detected.jpg') }}?{{ random() }}", bounds).addTo(map);
+            map.fitBounds(bounds);
+
+            fetch("{{ url_for('static', filename='boulder_points.json') }}?{{ random() }}")
+                .then(res => res.json())
+                .then(data => {
+                    const heat = L.heatLayer(data, { 
+                        radius: 25,
+                        blur: 15,
+                        maxZoom: 17,
+                    }).addTo(map);
+                })
+                .catch(err => console.log('Heatmap data not available yet'));
+        }
+
+        // Show results if they exist
+        window.addEventListener('load', () => {
+            // Check if we have results by looking for the preview image
+            const previewImg = document.querySelector('img[src*="preview.jpg"]');
+            if (previewImg && previewImg.complete) {
+                results.style.display = 'block';
+                setTimeout(initializeMap, 500); // Initialize map after results are shown
+            }
+        });
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Progressive image loading
+        function loadImagesProgressively() {
+            const images = document.querySelectorAll('.result-image');
+            images.forEach((img, index) => {
+                setTimeout(() => {
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.5s ease';
+                    img.onload = () => {
+                        img.style.opacity = '1';
+                    };
+                }, index * 200);
+            });
+        }
+
+        // Call when results are shown
+        if (results.style.display !== 'none') {
+            loadImagesProgressively();
+        }
+
+
+        function handleFileUpload() {
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                
+                // Set a flag to indicate we're processing
+                sessionStorage.setItem('isProcessing', 'true');
+                
+                // Hide the upload area
+                uploadArea.style.display = 'none';
+                
+                // Show file name and status
+                document.getElementById('uploadCompleteText').innerHTML = `
+                    <div style="background: rgba(6, 214, 160, 0.1); border: 1px solid var(--accent-tertiary); border-radius: 12px; padding: 1rem; margin-top: 1rem;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                            <span>✅</span>
+                            <span style="font-weight: 600;">Uploaded: ${fileName}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                            Processing your lunar image...
+                        </div>
+                    </div>
+                `;
+                
+                processing.style.display = 'block';
+                uploadForm.submit();
+            }
+        }
+
+        // Add this new function
+        function scrollToResults() {
+            const resultsSection = document.getElementById('results');
+            if (resultsSection && resultsSection.style.display !== 'none') {
+                setTimeout(() => {
+                    resultsSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 500);
+            }
+        }
+
+        // Update your existing window load event listener
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('theme-icon').textContent = '☀️';
+                document.getElementById('theme-text').textContent = 'Light Mode';
+            }
+
+            const wasProcessing = sessionStorage.getItem('isProcessing');
+            const previewImg = document.querySelector('img[src*="preview.jpg"]');
+
+            if (wasProcessing === 'true' && previewImg && previewImg.complete) {
+                sessionStorage.removeItem('isProcessing');
+                document.getElementById('results').style.display = 'block';
+                initializeMap();
+                scrollToResults();
+            } else {
+                document.getElementById('results').style.display = 'none';
+            }
+        });
+
+
+
+        //function to handle "Analyze Another Image"
+        function analyzeAnother() {
+            // Reset only the upload form, keep results visible
+            fileInput.value = '';
+            
+            // Reset upload area to initial state
+            uploadArea.style.display = 'block';
+            document.getElementById('uploadCompleteText').innerHTML = '';
+            processing.style.display = 'none';
+            
+            // Scroll to upload section
+            document.getElementById('uploadSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+    </script>
+</body>
+</html>

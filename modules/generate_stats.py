@@ -1,0 +1,123 @@
+def generate_stats():
+    import pandas as pd
+    import numpy as np
+    import os
+    from datetime import datetime
+    
+    try:
+        # Read the boulder data CSV (check multiple possible locations)
+        csv_files = [
+            os.path.join(p, f)
+            for p in ["", "static"]  # "" = root directory, "static" = subfolder
+            for f in ["boulder_data.csv", "boulder_data_clustered.csv"]
+        ]
+
+        df = None
+        
+        for csv_file in csv_files:
+            if os.path.exists(csv_file):
+                df = pd.read_csv(csv_file)
+                print(f"[📊] Loaded boulder data from: {csv_file}")
+                break
+        
+        if df is None:
+            print("[⚠️] No boulder data CSV file found!")
+            # Create a default stats file
+            output_path = "static/stats_summary.txt"
+            with open(output_path, "w", encoding='utf-8') as f:
+                f.write("Boulder Detection Statistics Summary\n")
+                f.write("======================================\n\n")
+                f.write("❌ No boulder data available\n")
+                f.write("Please ensure the detection pipeline ran successfully.\n")
+            return
+        
+        # Basic metrics
+        total = len(df)
+        
+        # Check if we have the expected columns
+        if "Diameter (m)" not in df.columns:
+            print(f"[⚠️] Expected 'Diameter (m)' column not found. Available columns: {df.columns.tolist()}")
+            # Try alternative column names
+            diameter_col = None
+            for col in df.columns:
+                if 'diameter' in col.lower() or 'size' in col.lower():
+                    diameter_col = col
+                    break
+            
+            if diameter_col is None:
+                print("[❌] No diameter/size column found in boulder data")
+                return
+        else:
+            diameter_col = "Diameter (m)"
+        
+        min_d = df[diameter_col].min()
+        max_d = df[diameter_col].max()
+        avg_d = df[diameter_col].mean()
+        std_d = df[diameter_col].std()
+        median_d = df[diameter_col].median()
+        
+        # Estimated area covered by boulders (assuming circular shape)
+        area = np.pi * (df[diameter_col] / 2) ** 2
+        total_area = area.sum()
+        
+        # Additional statistics
+        large_boulders = len(df[df[diameter_col] > avg_d])
+        small_boulders = total - large_boulders
+        
+        # Create timestamp
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        # Save to text file in readable format
+        output_path = "static/stats_summary.txt"
+        with open(output_path, "w", encoding='utf-8') as f:
+            f.write("🌕 Boulder Detection Statistics Summary\n")
+            f.write("=" * 50 + "\n\n")
+            f.write(f"📅 Analysis Generated: {timestamp}\n\n")
+            f.write("📊 DETECTION SUMMARY\n")
+            f.write("-" * 25 + "\n")
+            f.write(f"🪨 Total Boulders Detected : {total:,}\n")
+            f.write(f"🔍 Large Boulders (>avg)   : {large_boulders:,}\n")
+            f.write(f"🔸 Small Boulders (≤avg)   : {small_boulders:,}\n\n")
+            
+            f.write("📏 SIZE DISTRIBUTION\n")
+            f.write("-" * 25 + "\n")
+            f.write(f"📐 Minimum Diameter        : {min_d:.2f} m\n")
+            f.write(f"📐 Maximum Diameter        : {max_d:.2f} m\n")
+            f.write(f"📐 Average Diameter        : {avg_d:.2f} m\n")
+            f.write(f"📐 Median Diameter         : {median_d:.2f} m\n")
+            f.write(f"📊 Standard Deviation      : {std_d:.2f} m\n\n")
+            
+            f.write("🗺️ AREA COVERAGE\n")
+            f.write("-" * 25 + "\n")
+            f.write(f"📍 Total Area Covered      : {total_area:.2f} sq. meters\n")
+            f.write(f"📍 Average Boulder Area    : {total_area/total:.2f} sq. meters\n\n")
+            
+            f.write("🔬 DATA QUALITY\n")
+            f.write("-" * 25 + "\n")
+            f.write(f"✅ Data Source Column      : {diameter_col}\n")
+            f.write(f"✅ Total Data Points       : {total:,}\n")
+            f.write(f"✅ Missing Values          : {df[diameter_col].isna().sum()}\n\n")
+            
+            # Add percentile information
+            f.write("📈 PERCENTILE DISTRIBUTION\n")
+            f.write("-" * 25 + "\n")
+            f.write(f"25th Percentile           : {df[diameter_col].quantile(0.25):.2f} m\n")
+            f.write(f"50th Percentile (Median)  : {median_d:.2f} m\n")
+            f.write(f"75th Percentile           : {df[diameter_col].quantile(0.75):.2f} m\n")
+            f.write(f"90th Percentile           : {df[diameter_col].quantile(0.90):.2f} m\n")
+            f.write(f"95th Percentile           : {df[diameter_col].quantile(0.95):.2f} m\n\n")
+            
+            f.write("🏷️ Generated by SOMA - Advanced Lunar Analysis System\n")
+        
+        print(f"[✅] Fresh statistics saved to {output_path}")
+        print(f"[📊] Analyzed {total} boulders with average diameter {avg_d:.2f}m")
+        
+    except Exception as e:
+        print(f"[❌] Error generating statistics: {str(e)}")
+        # Create error stats file
+        output_path = "static/stats_summary.txt"
+        with open(output_path, "w", encoding='utf-8') as f:
+            f.write("Boulder Detection Statistics Summary\n")
+            f.write("======================================\n\n")
+            f.write(f"❌ Error generating statistics: {str(e)}\n")
+            f.write("Please check the boulder detection output files.\n")
