@@ -1,7 +1,7 @@
 
 # 🌕 SOMA - Surface Observation and Mapping Algorithm
 
-**Novel method to detect landslides and boulders on the Moon using Chandrayaan-1/2 imagery**
+**Novel method for detecting landslides and boulders on the Moon using Chandrayaan-1/2 imagery**
 
 ---
 
