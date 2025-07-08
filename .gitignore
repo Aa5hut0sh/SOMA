@@ -1,4 +1,42 @@
-.vercel
+# Ignore all common image files (not needed in repo)
+*.jpg
+*.jpeg
+*.png
+*.tif
+*.tiff
+*.bmp
+*.gif
+*.webp
+
+# Ignore any folders typically used for storing images
+images/
+imgs/
+assets/images/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Python cache and compiled bytecode
+__pycache__/
+*.py[cod]
+
+# Log and environment files
+*.log
+.env
+.env.*
+
+# Virtual environments
+venv/
+.venv/
+
+# Frontend build output and dependencies
+build/
+dist/
+node_modules/
+
+# Ignore deployment/config files not used in this project
+.vercel/
 package.json
-procfile
+Procfile
 railway.json
