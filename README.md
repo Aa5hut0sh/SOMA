@@ -111,7 +111,7 @@ SOMA is distinct because:
 
 ## 🧑‍💻 Contributors
 
-- Ashutosh Sharma – Team Leader
+- Ashutosh Sharma
 - Gurpreet Arora
 - Suryansh
 - Saumya Ganeshe
